@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+        <link href='//fonts.googleapis.com/css?family=Source Code Pro' rel='stylesheet'>
+        <title> CTA Bus Tracker</title>
+        <h1>
+           CTA Bus Tracker
+        </h1>
+        <h2>
+            Click the button to find how close buses around Lane are!
+        </h2>
+        <style>
+            .form
+            {
+                font-family: 'Source Code Pro'; 
+            }
+            #district_type
+            {
+                font-family: 'Source Code Pro';
+            }
+            #divv
+            {
+                font-family: 'Source Code Pro';
+            }
+            h1{
+                font-family: 'Source Code Pro';
+            }
+           div      {
+                background-color: #FF5F6D;
+                border-style: line;
+                border-radius: 25px;
+                padding: 15px;
+
+       }
+     
+            h2 {
+                font-size:1em;
+                font-family: 'Source Code Pro';
+                
+            }
+            h3 {
+                font-size:1em;
+                font-family: 'Source Code Pro';
+            }    
+            body {
+                background-color:  #4873bd;
+            }
+            p, h1 {font-family: 'Source Code Pro';}
+            p {font-size:1.5em;line-height:1.5em; margin-left: 24px; color: black;}
+            pre {font-size: 2em;}
+</style>
+<body>
+ <button id="submit">View Busses</button></center>
+ <br>
+ <div id="rt152"></div>
+ <br>
+ <div id="rtX49"></div>
+ <br>
+ <div id="rt49"></div>
+ <br>
+ <div id="rt52"></div>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script>
+      $("#rt49").hide()
+      $("#rtX49").hide()
+      $("#rt152").hide()
+      $("#rt52").hide()
+      $("#submit").click(function() {
+         $("#rt49").empty().show()
+         $("#rtX49").empty().show()
+         $("#rt152").empty().show()
+         $("#rt52").empty().show()
+          var apiPassThruUrl = "https://polar-garden-75406.herokuapp.com/apiPassThru.php";
+          var apiEndpoint = "http://ctabustracker.com/bustime/api/v2/getpredictions";
+          $.ajax({
+              url: apiPassThruUrl,
+              dataType: "json",
+              method: 'GET',
+              data: {"apiEndpoint": apiEndpoint,
+                      "key" : "vHSxffh3B8ETPKmELkpFnjHbA",
+                      "format":"json",
+                      "rt":"49,X49,152,52",
+                      "stpid":"8417,12527,15231"
+              }
+            }).done (function (data) {
+             $("#rt49").append("<h2>Bus 49</h2>")
+             $("#rtX49").append("<h2>Bus X49</h2>")
+             $("#rt152").append("<h2>Bus 152</h2>")
+             $("#rt52").append("<h2>Bus 52</h2>")
+              $.each(data["bustime-response"]["prd"], function(i,v) {
+                  $("#rt" + v.rt).append("Route Number: " + v.rt
+                  +  "<br>" 
+                  + "Route Direction: " + v.rtdir 
+                  + "<br>"
+                  + "Bus Stop: " + v.stpnm  
+                  + "<br>"
+                  +  "Minutes until arrival: " + v.prdctdn 
+                  + "<hr>");
+              });
+            });
+        });
+</script>
+</body>
+</html>
